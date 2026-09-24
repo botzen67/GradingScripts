@@ -578,6 +578,7 @@ class GitLabAPIClient(APIClient):
         organization = config.gitlab_organization
         self.server_url = config.gitlab_server
         self.gitlab_path_to_repos = config.gitlab_path_to_repos
+        self.gitlab_path_to_starter_code = config.gitlab_starter_code_path
         headers = {
             'Accept': 'application/json',
             'Authorization': f'Bearer {access_token}'
@@ -599,7 +600,7 @@ class GitLabAPIClient(APIClient):
         if not repo_prefix:
             return True, -1
         params = dict(self.prefix_exists_params)
-        params['search'] = f'starter_code/{repo_prefix}'
+        params['search'] = f'{self.gitlab_path_to_starter_code}{repo_prefix}'
         url = f'{self.server_url}/api/v4/groups/{quote(self.organization)}/search'
         response = self.sync_request(url, params)
         if response.status_code != 200:
